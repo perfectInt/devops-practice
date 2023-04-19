@@ -9,18 +9,24 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
+    strategy:
+     matrix:
+       include:
+        - os: ubuntu-latest
+        - os: windows-latest
+        - os: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build
-        run: cmake --build .
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: cpp_app
-          path: |
-            **/*.o
-          retention-days: 5
+
+      - name: Build for Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: gcc -fPIC -lm -shared src/stats.c -o dist/sqlite3-stats.so
+
+      - name: Build for Windows
+        if: matrix.os == 'windows-latest'
+        run: gcc -fPIC -lm -shared src/stats.c -o dist/sqlite3-stats.dll
+
+      - name: Build for macOS
+        if: matrix.os == 'macos-latest'
+        run: gcc -fno-common -dynamiclib src/stats.c -o dist/sqlite3-stats.dylib
