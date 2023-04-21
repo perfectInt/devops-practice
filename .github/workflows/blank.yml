@@ -28,12 +28,6 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           cl /EHsc hello.cpp
-          -name: Upload a Build Artifact
-          uses: actions/upload-artifact@v3.1.2
-          with:
-            name: cpp_app
-            path: hello.exe
-            retention-days: 5
 
       - name: Build for macOS
         if: matrix.os == 'macos-latest'
