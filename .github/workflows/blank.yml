@@ -66,6 +66,3 @@ jobs:
       with:
         name: cpp_app_matrix
     - uses: actions/checkout@v3
-    - uses: ncipollo/release-action@v1
-      with:
-        artifacts: "hi_*.o"
